@@ -1,19 +1,14 @@
-#https://youtu.be/DLn3jOsNRVE?t=4259 
 import base64
 from cryptography.fernet import Fernet
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
-import getpass
-
-#txtfile = "D:\\Python39\AAACodes\\ngoarchives\\master_pass\\password.txt"
-
+from getpass import getpass #hides your input when inputting in the terminal
 
 class master_pass:
     """
     The master password is used to create a very special key. The special
     key is used to encrypt and decrypt the other passwords stored in a text file.
     """
-    
     def __init__(self):
         self.fer = None
         
@@ -35,16 +30,14 @@ class master_pass:
         for line in filelist:
             data = line.rstrip()
             name, pswrd = data.split("|")
-            #print(f"pswrd: {pswrd}")
             name, pswrd = name.encode(), pswrd.encode()
             pswrd = self.fer.decrypt(pswrd).decode() 
             name = self.fer.decrypt(name).decode()
             newname.append(name)
             newpass.append(pswrd)
-        #print(f"newname: {newname} newpass: {newpass}")
-
+        
         self.master_write_key()
-
+    
         with open("password.txt", "w") as file:
             for i in range(len(newname)):
                 title = newname[i].encode()
@@ -59,7 +52,11 @@ class master_pass:
         """
         Creates the key for the master password. 
         """
-        master = getpass.getpass("master: ")
+        master = getpass("master: ")
+        confirm = getpass("confirm password: ")
+        if master != confirm:
+            print("Not the same, try again")
+            quit()
         master = master.encode()
         salt = b"5"
         kdf = PBKDF2HMAC(
@@ -133,7 +130,6 @@ class master_pass:
         for line in filelist:
             data = line.rstrip()
             name, pswrd = data.split("|")
-            #print(f"pswrd: {pswrd}")
             name, pswrd = name.encode(), pswrd.encode()
             pswrd = self.fer.decrypt(pswrd).decode()
             name = self.fer.decrypt(name).decode()
@@ -147,7 +143,7 @@ class master_pass:
         to the text file.
         """
         title = input("input username: ")
-        pswrd = getpass.getpass("input password: ")
+        pswrd = getpass("input password: ")
         title, pswrd = title.encode(), pswrd.encode()
 
         with open("password.txt", "a") as file:
@@ -164,7 +160,6 @@ class master_pass:
         for line in linelist:
             data = line.rstrip()
             name, pswrd = data.split("|")
-            #print(f"pswrd: {pswrd}")
             name = name.encode()
             name = self.fer.decrypt(name).decode()
             print(name)
@@ -177,19 +172,16 @@ class master_pass:
         
         exists = False
         for i in range(len(linelist)):
-            #print(f"lines[:lentitle] {linelist[i][:lentitle]}")
             decrypted = linelist[i].encode()
             decrypted = self.fer.decrypt(decrypted).decode()
             if decrypted[:lentitle] == title:
                 dline = i
                 exists = True
-                #print(f"dline: {dline}")
                 break
 
         if not exists:      
             print("doesn't exist")
         else:
-            #print(f"linelist[dline] {linelist[dline]}")
             linelist[dline] = ""
             print(f"deleted {title}")
 
@@ -228,7 +220,7 @@ def main():
         elif mode == "4":
             master.change_master()
         else:
-            print("bruh")
+            print("Invalid input")
             continue
 
 if __name__ == "__main__":
