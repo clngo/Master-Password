@@ -2,13 +2,14 @@ import base64
 from cryptography.fernet import Fernet
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
-from getpass import getpass #hides your input when inputting in the terminal
+import getpass
 
 class master_pass:
     """
     The master password is used to create a very special key. The special
     key is used to encrypt and decrypt the other passwords stored in a text file.
     """
+    
     def __init__(self):
         self.fer = None
         
@@ -35,9 +36,9 @@ class master_pass:
             name = self.fer.decrypt(name).decode()
             newname.append(name)
             newpass.append(pswrd)
-        
+
         self.master_write_key()
-    
+
         with open("password.txt", "w") as file:
             for i in range(len(newname)):
                 title = newname[i].encode()
@@ -52,11 +53,7 @@ class master_pass:
         """
         Creates the key for the master password. 
         """
-        master = getpass("master: ")
-        confirm = getpass("confirm password: ")
-        if master != confirm:
-            print("Not the same, try again")
-            quit()
+        master = getpass.getpass("master: ")
         master = master.encode()
         salt = b"5"
         kdf = PBKDF2HMAC(
@@ -85,28 +82,16 @@ class master_pass:
         file.close()
         if line:
             name, pswrd = line.split("|")
-            #print(f"pswrd: {pswrd}")
             pswrd = pswrd.encode()
             try:
                 pswrd = self.fer.decrypt(pswrd).decode()
             except:
-                print("Wrong master")
+                print("Invalid password")
                 return 
         else: 
-            print("new master created. save 1 password to save this master. DON'T FORGETT")
+            print("New master password created")
+            print("IMPORTANT: Add 1 password to save master password")
         return True
-        
-
-    # def nothing_write_key(self): 
-    #     """
-    #     Creates a random key to override the current key. Purpose to hide the master 
-    #     password by overriding rather than deleting the random key every time.
-    #     """
-    #     tempkey = Fernet.generate_key()
-    #     with open("key.key", "wb") as key_file:
-    #         key_file.write(tempkey)
-    #     key_file.close()
-
 
     def read(self):
         """
@@ -143,7 +128,7 @@ class master_pass:
         to the text file.
         """
         title = input("input username: ")
-        pswrd = getpass("input password: ")
+        pswrd = getpass.getpass("input password: ")
         title, pswrd = title.encode(), pswrd.encode()
 
         with open("password.txt", "a") as file:
@@ -164,7 +149,7 @@ class master_pass:
             name = self.fer.decrypt(name).decode()
             print(name)
 
-        title = input("deleting for wut: ")
+        title = input("Input username to delete: ")
         if not title:
             print("deleting cancelled")
             return

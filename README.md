@@ -40,18 +40,17 @@ By first inputting master password, you could organize a list of passwords for a
 
 ### How it Works
 
-A unique encryption key is created from the master password. No other key will ever be the same unless it is created from the master password. This encryption key is able to encrypt and decrypt other passwords. 
+A unique encryption key is created from the master password. No other key will ever be the same unless it is created from the master password. This encryption key is able to encrypt and decrypt stored passwords. When a user enters a master password, the program will create an encryption key from it, and try to decrypt a password inside the text file. If the password did not get decrypted, then the encryption key is incorrect, and therefore, the master password is incorrect. If the password did get decrypted, then the encryption key is correct, and therefore, the master password is correct. This is why storing at least one person is important. 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ### Optimizations
 
-As stated earlier, I arbitrarily chose a constant EAR value as the threshold to close the eye. To be more accurate, I could calculate the average slope produced (visually shown in the figure/graph) and keep track of when the change in EAR is drastically slow as an indicate of a blink. This is far more accurate as an indicator of a blink isn't precisely on a constant value, but a sudden change. 
-Furthermore, the glare from my glasses interferes with accurate eye landmarks and so it incorrectly counts more blinks than actuality. 
+The stored passwords (not the master password) is stored in a text file. Although the passwords stored in the text file is encrypted, having access to the text file makes it vulnerable to deletion or manipulation, losing the stored passswords. Perhaps looking into other ways of storing the passwords will keep it from being manipulated. Nonetheless, the passwords are unable to be seen and the data remains hidden.
 
 ### Lessons Learned
 
-I had so much fun creating this project. Flipping on my camera and look at my face be covered in green made me forget the hours I struggled coding. Although it wasn't necessary, I wanted to plot down the data for myself. I learned that csv files were the best way of storing sensory data. So now I have a Python file on creating a csv file and how to animate a plot in real time. It was like a second mini project on top of the eye detection. 
+My initial problem was storing the encryption key somewhere safe without it being reused easily. Instead, I demanded the user to create the encryption key themselves through the master password. This way, the only way to get the correct encryption key wasn't to store it, but to create one that matches. 
 
 ### Built With
 * [![Python][Python.js]][Python-url]
@@ -64,30 +63,28 @@ I had so much fun creating this project. Flipping on my camera and look at my fa
 To get a local copy up and running follow these simple example steps.
 
 ### Prerequisites
+To install packages, run the command:
+```sh
+pip install -r requirements.txt
+```
+
 * pyca/cryptography includes both high level recipes and low level interfaces to common cryptographic algorithms such as symmetric ciphers, message digests, and key derivation functions. 
-  ```sh
-  pip install cryptography
-  ```
+
+* [Fernet](https://cryptography.io/en/latest/fernet/) is an implementation of symmetric (aka "secret key") authenticated cryptography. 
 
 
 ### Installation
 1. Clone the repo
-   ```sh
-   git clone https://github.com/clngo/Master-Password.git
-   ```
+  ```sh
+  git clone https://github.com/clngo/Master-Password.git
+  ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-Run bleenk.py to start the program.
-
-It will first provide a list of options to choose from.
-You can enable face landmarks, eye landmarks, or even an indicator of which eye you wink at. 
-To turn off the program from any of these options enabled, press ESC. Otherwise, CTRL+C.
-The last option to enable stats will produce a graph that plots the eye aspect ratio (EAR) over time.
-Disabling all of the functions will not disable the program from counting the number of blinks and the cartoon blinking sound effect if the number of blinks is below 25 within 60 seconds. 
+First, input your master password to store all the passwords. Since there are no stored passwords on first use, the master password comes first. Once a master password is created, you must add at least 1 password into the text file to save the master password. Leaving an empty or nonexistent text file for the program to read will not save the master password (why keep a master password that saves 0 passwords). 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
